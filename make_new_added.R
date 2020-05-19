@@ -60,7 +60,7 @@ mode(r_lab$lonlat) #numeric
 r_lab$lonlat = as.character(as.factor(r_lab$lonlat))
 # r_data = left_join(r_data, r_lab, by = "lonlat", keep = F)
 r_data = merge(r_data, r_lab) %>% select(-lonlat, -lab, -X)
-write.csv(r_data, "ReviseList.csv")
+write.csv(r_data, "OutlierList.csv", fileEncoding = "CP932")
 
 #tentative data
 sita = new %>% filter(lat <= 35.4) %>% select(-X) #4099
@@ -72,4 +72,4 @@ ue2 = subset(ue2, is.na(ue2$lab)) %>% select(-lonlat, -X, -lab)
 head(sita)
 head(ue2)
 tent_data = rbind(ue2, sita)
-write.csv(tent_data, "tent_data.csv")
+write.csv(tent_data, "tent_data.csv", fileEncoding = "CP932")
