@@ -25,4 +25,4 @@ sp_list$Trend = c("dec", "dec", "inc", "inc", "dec", "inc", "dec", "fumei", "inc
 data = left_join(data, sp_list, by = "FISH")
 
 setwd("/Users/Yuki/Dropbox/Network2020")
-write.csv(data, "data.csv")
+write.csv(data, "VASTdata.csv")
