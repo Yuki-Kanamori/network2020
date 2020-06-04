@@ -14,7 +14,7 @@ df = read.csv("VASTdata.csv", fileEncoding = "CP932")
 summary(df)
 unique(df$FISH2)
 df = df %>% 
-  filter(FISH2 == "kurodai") %>% 
+  filter(FISH2 == "kurodai", Y > 1989) %>% 
   select(Y, Lon, Lat, CPUE, FISH2) %>% 
   rename(lat = Lat, lon = Lon, year = Y, spp = FISH2, cpue = CPUE)
 summary(df)
