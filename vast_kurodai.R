@@ -15,8 +15,8 @@ summary(df)
 unique(df$FISH2)
 df = df %>% 
   filter(FISH2 == "kurodai", Y > 1989) %>% 
-  select(Y, Lon, Lat, CPUE, FISH2) %>% 
-  rename(lat = Lat, lon = Lon, year = Y, spp = FISH2, cpue = CPUE)
+  select(Y, M, Lon, Lat, CPUE, FISH2) %>% 
+  rename(lat = Lat, lon = Lon, year = Y, month = M, spp = FISH2, cpue = CPUE)
 summary(df)
 df = na.omit(df)
 
@@ -33,7 +33,7 @@ grid_size_km = 25
 n_x = 50
 
 # 1.3 Model settings
-FieldConfig = c(Omega1 = 0, Epsilon1 = 0, Omega2 = 1, Epsilon2 = 1) #factor analysis
+FieldConfig = c(Omega1 = 0, Epsilon1 = 0, Omega2 = 5, Epsilon2 = 5) #factor analysis
 RhoConfig = c(Beta1 = 0, Beta2 = 0, Epsilon1 = 0, Epsilon2 = 0) #0: fixed, 1: independent, 2:RW, 3:constant, 4:AR
 OverdispersionConfig = c("Eta1" = 0, "Eta2" = 0) #overdispersion
 ObsModel = c(PosDist = 1, Link = 3)
@@ -49,7 +49,7 @@ strata.limits = data.frame('STRATA'="All_areas")
 Region = "others"
 
 # 1.6 Save settings
-DateFile = paste0(dirname,'/kurodai_lognorm1990/')
+DateFile = paste0(dirname,'/kurodai_lognorm31990Mcate/')
 dir.create(DateFile)
 Record = list(Version = Version, Method = Method, grid_size_km = grid_size_km, n_x = n_x, 
               FieldConfig = FieldConfig, RhoConfig = RhoConfig, OverdispersionConfig = OverdispersionConfig, 
@@ -63,7 +63,7 @@ capture.output(Record, file = paste0(DateFile, "/Record.txt"))
 # 2. Prepare the data ----------------------------------------------
 # 2.1 Data-frame
 head(df)
-Data_Geostat = df %>% select(year, lon, lat, cpue, spp) %>% mutate(Year = year, Lon = lon, Lat = lat, Catch_KG = cpue, spp = spp)
+Data_Geostat = df %>% select(year, month, lon, lat, cpue, spp) %>% mutate(Year = year, Month = month, Lon = lon, Lat = lat, Catch_KG = cpue, spp = spp)
 
 # 2.2 Extrapolation grid
 Extrapolation_List = FishStatsUtils::make_extrapolation_info(
@@ -101,7 +101,8 @@ TmbData = make_data(
   OverdispersionConfig = OverdispersionConfig, 
   RhoConfig = RhoConfig, 
   ObsModel = ObsModel, 
-  c_iz = as.numeric(as.factor(Data_Geostat[, "spp2"])) - 1, 
+  # c_iz = as.numeric(as.factor(Data_Geostat[, "spp2"])) - 1, 
+  c_iz = as.numeric(as.factor(Data_Geostat[, "Month"])) - 1,
   b_i = Data_Geostat[, 'Catch_KG'], 
   a_i = rep(1, nrow(Data_Geostat)), #cpue
   #a_i = Data_Geostat[, 'AreaSwept_km2'], # catch and effort
